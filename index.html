@@ -854,7 +854,6 @@ const HOJAS = [
 
 const byId = (id) => HOJAS.find((h) => h.id === id);
 const norm = (s) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
 const grid = document.getElementById("grid");
 const filters = document.getElementById("filters");
@@ -1072,28 +1071,49 @@ function renderNervaduras() {
 }
 
 const quiz = document.getElementById("quiz");
+const PREGUNTAS_POR_PARTIDA = 10;
+const OPCIONES_POR_PREGUNTA = 4;
 let preguntas = [];
 let indicePregunta = 0;
 let aciertos = 0;
 let respondida = false;
 
-function barajar(a) {
-  return a.map((v) => [Math.random(), v]).sort((x, y) => x[0] - y[0]).map((p) => p[1]);
+function barajar(lista) {
+  const a = [...lista];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function letra(i) {
+  return String.fromCharCode(65 + i);
+}
+
+function opcionesAleatorias(correcta) {
+  const nombres = [correcta.nombre];
+  for (const otra of barajar(HOJAS)) {
+    if (nombres.length >= OPCIONES_POR_PREGUNTA) break;
+    if (!nombres.includes(otra.nombre)) nombres.push(otra.nombre);
+  }
+  return barajar(nombres);
 }
 
 function nuevoQuiz() {
-  preguntas = barajar(HOJAS).slice(0, 10).map((h) => {
-    const contenedor = new Set([h.nombre]);
-    let intentos = 0;
-    while (contenedor.size < 4 && intentos < 60) {
-      contenedor.add(pick(HOJAS).nombre);
-      intentos++;
-    }
-    return { hoja: h, opciones: barajar([...contenedor]), elegida: null };
+  const total = Math.min(PREGUNTAS_POR_PARTIDA, HOJAS.length);
+  preguntas = barajar(HOJAS).slice(0, total).map((h) => {
+    const opciones = opcionesAleatorias(h);
+    return { hoja: h, opciones, correcta: opciones.indexOf(h.nombre), elegida: null };
   });
   indicePregunta = 0;
   aciertos = 0;
+  respondida = false;
   renderQuiz();
+}
+
+function hayPartidaEnCurso() {
+  return indicePregunta > 0 && indicePregunta < preguntas.length;
 }
 
 function renderQuiz() {
@@ -1136,22 +1156,23 @@ function renderQuiz() {
     const b = document.createElement("button");
     b.type = "button";
     b.className = "opt";
-    b.innerHTML = `<span class="letter">${String.fromCharCode(65 + i)}</span><span>${escapeHtml(nombre)}</span>`;
+    b.setAttribute("data-indice", String(i));
+    b.innerHTML = `<span class="letter">${letra(i)}</span><span>${escapeHtml(nombre)}</span>`;
     b.addEventListener("click", () => {
       if (respondida) return;
       respondida = true;
-      p.elegida = nombre;
-      const correcta = nombre === p.hoja.nombre;
-      if (correcta) aciertos++;
+      p.elegida = i;
+      const acierto = i === p.correcta;
+      if (acierto) aciertos++;
       [...opts.children].forEach((el, j) => {
         el.disabled = true;
-        const n = p.opciones[j];
-        if (n === p.hoja.nombre) el.classList.add("correct");
-        else if (n === nombre) el.classList.add("wrong");
+        if (j === p.correcta) el.classList.add("correct");
+        else if (j === i) el.classList.add("wrong");
       });
       const fb = document.getElementById("fb");
-      fb.innerHTML = `<div class="feedback ${correcta ? "ok" : "no"}">
-        <b>${correcta ? "¡Correcto!" : "No era esa."}</b> La forma se llama <b>${escapeHtml(p.hoja.nombre)}</b> (${escapeHtml(p.hoja.alias[0])}).
+      fb.innerHTML = `<div class="feedback ${acierto ? "ok" : "no"}">
+        <b>${acierto ? "¡Correcto!" : `No era esa: la opción ${letra(i)} era «${escapeHtml(p.opciones[i])}».`}</b>
+        La forma correcta es la <b>${letra(p.correcta)}</b>, <b>${escapeHtml(p.hoja.nombre)}</b> (${escapeHtml(p.hoja.alias[0])}).
         ${escapeHtml(p.hoja.desc)} <b>Ejemplos:</b> ${escapeHtml(p.hoja.ejemplos.join(", "))}.</div>`;
       document.getElementById("row").hidden = false;
       document.getElementById("next").focus();
@@ -1173,7 +1194,7 @@ function irA(vista) {
   });
   if (location.hash.slice(1) !== vista) history.replaceState(null, "", `#${vista}`);
   window.scrollTo({ top: 0, behavior: "auto" });
-  if (vista === "quiz" && !preguntas.length) nuevoQuiz();
+  if (vista === "quiz" && (!preguntas.length || !hayPartidaEnCurso())) nuevoQuiz();
   if (vista === "comparar") renderComparador();
   if (vista === "nervaduras") renderNervaduras();
 }
