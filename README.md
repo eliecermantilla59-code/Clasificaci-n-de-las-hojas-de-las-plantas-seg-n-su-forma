@@ -2,9 +2,9 @@
 
 > *«Hola, me sorprende que alguien esté leyendo esto. Si lo lees, gracias por visitar este sitio. Espero que lo disfrutes.»*
 
-Aplicación web educativa e interactiva para aprender la **clasificación de las hojas de las plantas según su forma**. Incluye **24 formas ilustradas en SVG**, un **comparador** de hasta tres formas, una **guía de nervaduras** y un **quiz** de diez preguntas.
+Aplicación web educativa e interactiva para aprender la **clasificación de las hojas de las plantas según su forma**. Incluye **24 formas ilustradas en SVG**, un **comparador** de hasta tres formas, una **guía de nervaduras**, un **quiz** de diez preguntas y una sección de **insumos y herramientas recomendadas** con enlaces de afiliado.
 
-Todo está en **un único archivo `index.html`**: sin dependencias, sin instalación, sin conexión a internet. Las 24 hojas están dibujadas con vectores SVG generados por código, por lo que se ven nítidas en cualquier tamaño de pantalla y se recolorean con el tema oscuro.
+Todo está en **un único archivo `index.html`**: sin dependencias, sin instalación, sin conexión a internet para funcionar. Las 24 hojas están dibujadas con vectores SVG generados por código, por lo que se ven nítidas en cualquier tamaño de pantalla y se recolorean con el tema oscuro.
 
 ---
 

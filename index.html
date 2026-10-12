@@ -246,6 +246,27 @@ html[data-theme="oscuro"] .btn.primary{color:#26070d}
 .btn:disabled{opacity:.5;cursor:not-allowed}
 .score-big{font-size:3rem;font-weight:800;color:var(--accent);line-height:1}
 
+.insumos-grid{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.insumo{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;display:flex;flex-direction:column;gap:.6rem;box-shadow:var(--shadow)}
+.insumo-chip{align-self:flex-start;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--green-strong);background:var(--green-soft);padding:.2rem .6rem;border-radius:999px}
+.insumo h3{margin:0;font-size:1.08rem}
+.insumo p{margin:0;font-size:.93rem;color:var(--muted)}
+.btn-neon{
+  margin-top:auto;align-self:flex-start;display:inline-flex;align-items:center;gap:.5rem;
+  border:0;border-radius:12px;padding:.7rem 1.25rem;cursor:pointer;font-weight:800;
+  color:#fff;background:linear-gradient(135deg,#ff2d55,#ff9500);
+  text-decoration:none;letter-spacing:.02em;
+  animation:neon 2.4s ease-in-out infinite;
+  transition:transform .15s,filter .2s;
+}
+.btn-neon:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.btn-neon:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+@keyframes neon{
+  0%,100%{box-shadow:0 0 8px rgba(255,45,85,.55),0 0 22px rgba(255,149,0,.35)}
+  50%{box-shadow:0 0 16px rgba(255,45,85,.9),0 0 42px rgba(255,149,0,.6)}
+}
+.afiliado{margin-top:1.5rem;padding:.9rem 1.1rem;border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:var(--radius-sm);background:var(--surface-2);color:var(--muted);font-size:.86rem}
+.afiliado b{color:var(--text)}
 .ven-grid{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
 .ven-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem;box-shadow:var(--shadow)}
 .ven-card h3{font-size:1.05rem}
@@ -324,6 +345,7 @@ main{flex:1 0 auto}
       <button class="tab" role="tab" id="tab-comparar" data-view="comparar" aria-selected="false" aria-controls="view-comparar">Comparar</button>
       <button class="tab" role="tab" id="tab-nervaduras" data-view="nervaduras" aria-selected="false" aria-controls="view-nervaduras">Nervaduras</button>
       <button class="tab" role="tab" id="tab-quiz" data-view="quiz" aria-selected="false" aria-controls="view-quiz">Quiz</button>
+      <button class="tab" role="tab" id="tab-insumos" data-view="insumos" aria-selected="false" aria-controls="view-insumos">Insumos</button>
     </nav>
     <button class="icon-btn" id="theme-toggle" title="Cambiar entre tema claro y oscuro" aria-label="Cambiar tema">
       <svg id="icon-luna" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -401,6 +423,28 @@ main{flex:1 0 auto}
       <div class="quiz" id="quiz"></div>
     </section>
 
+    <section class="view" id="view-insumos" role="tabpanel" aria-labelledby="tab-insumos" hidden>
+      <div class="hero">
+        <h1>Insumos y herramientas recomendadas</h1>
+        <p class="lead">Material básico para observar, medir y catalogar hojas en el campo o en casa. Enlaces de compra para apoyar este proyecto.</p>
+      </div>
+      <div class="insumos-grid">
+        <article class="insumo">
+          <span class="insumo-chip">Bikain</span>
+          <h3>Kit de jardinería Bikain</h3>
+          <p>Taburete de herramientas con almacenamiento y cierre con cremallera: mantiene tijeras, guantes y herramientas pequeñas de mano ordenados y a mano mientras revisas tus plantas.</p>
+          <a class="btn-neon" href="https://link.amazon/B05Mrxrmp" target="_blank" rel="noopener noreferrer">Ver en Amazon</a>
+        </article>
+        <article class="insumo">
+          <span class="insumo-chip">Macetas</span>
+          <h3>Insumos y Accesorios para Plantas y Macetas</h3>
+          <p>Productos útiles para el cuidado de tus plantas: sustratos, macetas, etiquetado y otros accesorios imprescindibles para el hobby y el estudio botánico.</p>
+          <a class="btn-neon" href="https://link.amazon/B08PNboxo" target="_blank" rel="noopener noreferrer">Ver en Amazon</a>
+        </article>
+      </div>
+      <p class="afiliado"><b>Aviso de afiliación.</b> Los botones «Ver en Amazon» son enlaces de afiliado: si compras a través de ellos, Amazon nos paga una pequeña comisión sin coste adicional para ti. No influyen en el contenido ni en la clasificación de este sitio.</p>
+    </section>
+
   </div>
 </main>
 
@@ -415,6 +459,7 @@ main{flex:1 0 auto}
       <li><a href="#comparar" data-nav="comparar">Comparar</a></li>
       <li><a href="#nervaduras" data-nav="nervaduras">Nervaduras</a></li>
       <li><a href="#quiz" data-nav="quiz">Quiz</a></li>
+      <li><a href="#insumos" data-nav="insumos">Insumos</a></li>
     </ul>
   </div>
 </footer>
@@ -1185,7 +1230,7 @@ function renderQuiz() {
   });
 }
 
-const vistas = ["explorar", "comparar", "nervaduras", "quiz"];
+const vistas = ["explorar", "comparar", "nervaduras", "quiz", "insumos"];
 function irA(vista) {
   vistas.forEach((v) => {
     document.getElementById(`view-${v}`).hidden = v !== vista;
